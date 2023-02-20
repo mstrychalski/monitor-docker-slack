@@ -85,12 +85,12 @@ def monitor_docker_slack(docker_sock_file, white_pattern_list):
 
     err_msg = ""
     if len(stopped_container_list) != 0:
-        err_msg = "Detected Stopped Containers: \n%s\n%s" % (container_list_to_str(stopped_container_list), err_msg)
+        err_msg = ":red_circle: Detected Stopped Containers: \n%s\n%s" % (container_list_to_str(stopped_container_list), err_msg)
     if len(unhealthy_container_list) != 0:
-        err_msg = "Detected Unhealthy Containers: \n%s\n%s" % (container_list_to_str(unhealthy_container_list), err_msg)
+        err_msg = ":red_circle: Detected Unhealthy Containers: \n%s\n%s" % (container_list_to_str(unhealthy_container_list), err_msg)
 
     if err_msg == "":
-        return "OK", "OK: detect no stopped or unhealthy containers"
+        return "OK", ":large_green_circle: No stopped or unhealthy containers"
     else:
         return "ERROR", err_msg
 
@@ -133,15 +133,13 @@ if __name__ == '__main__':
         print("%s: %s" % (status, err_msg))
         if status == "OK":
             if has_send_error_alert is True:
-                slack_client.api_call("chat.postMessage", user=slack_username, as_user=False, channel=slack_channel,
-                                      text=err_msg)
+                slack_client.api_call("chat.postMessage", user=slack_username, channel=slack_channel, text=err_msg, mrkdwn=True)
                 has_send_error_alert = False
         else:
             if has_send_error_alert is False:
-                slack_client.api_call("chat.postMessage", user=slack_username, as_user=False, channel=slack_channel,
-                                      text=err_msg)
+                slack_client.api_call("chat.postMessage", user=slack_username, channel=slack_channel, text=err_msg, mrkdwn=True)
+
                 # avoid send alerts over and over again
                 has_send_error_alert = True
         time.sleep(check_interval)
 # File : monitor-docker-slack.py ends
-
