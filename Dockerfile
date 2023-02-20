@@ -23,7 +23,7 @@ ENV WHITE_LIST ""
 # seconds
 ENV CHECK_INTERVAL "300"
 
-LABEL maintainer="Denny<https://www.dennyzhang.com/contact>"
+LABEL maintainer="Michal Strychalski"
 
 USER root
 WORKDIR /
